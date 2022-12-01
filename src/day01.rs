@@ -86,22 +86,27 @@ Calories), then the third Elf (with 11000 Calories), then the fifth Elf (with
 Find the top three Elves carrying the most Calories. How many Calories are those
 Elves carrying in total?
 
+=> 200945
+
 */
 pub fn run() {
     print!("Hello from Day 1\n");
 
     let mut fattest_elf = 0;
     let mut current_elf = 0;
+    let mut all_elves = Vec::new();
+    all_elves.push(0);
 
     for line in INPUT1.lines() {
         if line.is_empty() {
+            all_elves.insert(0, 0);
             current_elf = 0;
             continue;
         }
 
         if let Ok(cal) = line.parse::<u32>() {
             current_elf += cal;
-
+            all_elves[0] += cal;
             fattest_elf = cmp::max(fattest_elf, current_elf);
         } else {
             eprint!("Could not parse line '{}'", line);
@@ -110,6 +115,18 @@ pub fn run() {
     }
 
     print!("The fattest elf is carrying {}\n", fattest_elf);
+
+    all_elves.sort();
+    all_elves.reverse();
+    all_elves.truncate(3);
+
+    let mut elves_sum = 0;
+    for top_elf in all_elves {
+        print!("Top Elf: {}\n", top_elf);
+        elves_sum += top_elf;
+    }
+
+    print!("All top elves: {}\n", elves_sum);
 }
 
 const INPUT1: &str = "\
