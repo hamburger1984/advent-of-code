@@ -1,0 +1,38 @@
+# --- example (10 paths) ---
+start-A
+start-b
+A-c
+A-b
+b-d
+A-end
+b-end
+# --- slightly larger (19 paths) ---
+#dc-end
+#HN-start
+#start-kj
+#dc-start
+#dc-HN
+#LN-dc
+#HN-end
+#kj-sa
+#kj-HN
+#kj-dc
+# --- even larger (226 paths) ---
+#fs-end
+#he-DX
+#fs-he
+#start-DX
+#pj-DX
+#end-zg
+#zg-sl
+#zg-pj
+#pj-he
+#RW-he
+#fs-DX
+#pj-RW
+#zg-RW
+#start-pj
+#he-WI
+#zg-he
+#pj-fs
+#start-RW
