@@ -7,24 +7,19 @@ pub fn process_part1(input:&str) -> String {
     let mut signal_sum = 0;
 
     for line in input.lines() {
+        if (cycle + 20) % 40 == 0 {
+            signal_sum += cycle * register_x;
+            //print!("{}: sum={}\n", cycle, signal_sum);
+        }
+        cycle += 1;
+
         match line.split(" ").collect::<Vec<&str>>().as_slice() {
-            ["noop"] => {
-                if (cycle + 20) % 40 == 0 {
-                    signal_sum += cycle * register_x;
-                    print!("{}: sum={}\n", cycle, signal_sum);
-                }
-                cycle += 1;
-            }
+            ["noop"] => {}
             ["addx", next_add] => {
                 let next_add_value:i64 = next_add.parse().unwrap();
                 if (cycle + 20) % 40 == 0 {
                     signal_sum += cycle * register_x;
-                    print!("{}: sum={}\n", cycle, signal_sum);
-                }
-                cycle += 1;
-                if (cycle + 20) % 40 == 0 {
-                    signal_sum += cycle * register_x;
-                    print!("{}: sum={}\n", cycle, signal_sum);
+                    //print!("{}: sum={}\n", cycle, signal_sum);
                 }
                 register_x += next_add_value;
                 cycle += 1;
@@ -36,6 +31,48 @@ pub fn process_part1(input:&str) -> String {
     return signal_sum.to_string()
 }
 
+pub fn process_part2(input:&str) -> String {
+    let mut sprite_position:i64 = 1;
+    let mut pixel_position = 0;
+
+    let mut screen:Vec<char> = Vec::new();
+
+    for line in input.lines() {
+        if (pixel_position - sprite_position).abs() <=1 {
+            screen.push('#');
+        } else {
+            screen.push('.');
+        }
+        pixel_position += 1;
+        if pixel_position == 40 {
+            screen.push('\n');
+            pixel_position = 0;
+        }
+
+        match line.split(" ").collect::<Vec<&str>>().as_slice() {
+            ["noop"] => {}
+            ["addx", next_add] => {
+                if (pixel_position - sprite_position).abs() <=1 {
+                    screen.push('#');
+                } else {
+                    screen.push('.');
+                }
+                pixel_position += 1;
+                if pixel_position == 40 {
+                    screen.push('\n');
+                    pixel_position = 0;
+                }
+
+                let next_add_value:i64 = next_add.parse().unwrap();
+                sprite_position += next_add_value;
+            }
+            _ => {exit(1)}
+        }
+    }
+
+    return screen.into_iter().collect();
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -45,6 +82,21 @@ mod tests {
         let result = process_part1(TEST_INPUT);
         assert_eq!(result, "13140");
     }
+
+    #[test]
+    fn test_part2() {
+        let result = process_part2(TEST_INPUT);
+        assert_eq!(result, TEST_RENDERING);
+    }
+
+    const TEST_RENDERING:&str =
+"##..##..##..##..##..##..##..##..##..##..
+###...###...###...###...###...###...###.
+####....####....####....####....####....
+#####.....#####.....#####.....#####.....
+######......######......######......####
+#######.......#######.......#######.....
+";
 
     const TEST_INPUT:&str = "addx 15
 addx -11
