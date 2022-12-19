@@ -1,3 +1,10 @@
+extern crate num_bigint;
+extern crate num_traits;
+
+use std::time::Instant;
+use num_bigint::BigUint;
+use num_traits::{One, Zero};
+
 use std::collections::VecDeque;
 
 pub fn process_part1(input: &str) -> String {
@@ -60,8 +67,10 @@ pub fn process_part1(input: &str) -> String {
     let rounds = 20;
     let monkey_count = monkeys.len();
 
+
     for round in 1..=rounds {
         print!("Round {}\n", round);
+
 
         for i_monkey in 0..monkey_count {
             //print!("Monkey {}\n", i_monkey);
@@ -75,12 +84,12 @@ pub fn process_part1(input: &str) -> String {
 
                     let target_monkey = match new_level % right[0].divisor == 0 {
                         true => right[0].target_true,
-                        false => right[0].target_false
+                        false => right[0].target_false,
                     };
 
                     //print!("  Throw to {}\n", target_monkey);
                     if target_monkey > i_monkey {
-                        right[target_monkey-i_monkey].items.push_back(new_level);
+                        right[target_monkey - i_monkey].items.push_back(new_level);
                     } else {
                         left[target_monkey].items.push_back(new_level);
                     }
@@ -91,8 +100,166 @@ pub fn process_part1(input: &str) -> String {
         }
     }
 
-    let mut activities:Vec<u64> = monkeys.iter().map(|m| {m.activities}).collect();
-    activities.sort_by(|a, b|{b.cmp(a)});
+    let mut activities: Vec<u64> = monkeys.iter().map(|m| m.activities).collect();
+    activities.sort_by(|a, b| b.cmp(a));
+
+    return (activities[0] * activities[1]).to_string();
+}
+
+pub fn process_part2(input: &str) -> String {
+    let mut monkeys: Vec<Monkey2> = Vec::new();
+
+    for monkey_str in input.split("\n\n") {
+        let mut items = VecDeque::new();
+        let mut opt_operation: Option<(bool, u64)> = None;
+        let mut opt_divisor: Option<u64> = None;
+        let mut opt_target_true: Option<usize> = None;
+        let mut opt_target_false: Option<usize> = None;
+
+        for line in monkey_str.lines().skip(1) {
+            match line.trim().split(" ").collect::<Vec<&str>>().as_slice() {
+                ["Operation:", "new", "=", "old", op1, op2] => {
+                    //print!("OP      {}{}\n", op1, op2);
+                    let is_multiplication = (*op1).eq("*");
+                    let value = match (*op2).eq("old") {
+                        true => u64::MAX,
+                        false => op2.parse().unwrap(),
+                    };
+                    opt_operation = Some((is_multiplication, value));
+                }
+                ["Test:", "divisible", "by", test_value] => {
+                    //print!("TS      >> {}\n", test_value);
+                    opt_divisor = Some(test_value.parse().unwrap());
+                }
+                ["If", "true:", "throw", "to", "monkey", target] => {
+                    //print!("YES     >> {}\n", target);
+                    opt_target_true = Some(target.parse().unwrap());
+                }
+                ["If", "false:", "throw", "to", "monkey", target] => {
+                    //print!("NO     >> {}\n", target);
+                    opt_target_false = Some(target.parse().unwrap());
+                }
+                other => {
+                    //print!("Items {:?}\n", other);
+                    for item in other.into_iter().skip(2) {
+                        items.push_back(item.trim_end_matches(',').parse().unwrap());
+                    }
+                }
+            }
+        }
+
+        if let Some(operation) = opt_operation {
+            if let Some(divisor) = opt_divisor {
+                if let Some(target_true) = opt_target_true {
+                    if let Some(target_false) = opt_target_false {
+                        monkeys.push(Monkey2 {
+                            items,
+                            operation,
+                            divisor,
+                            target_true,
+                            target_false,
+                            activities: 0,
+                        });
+                        continue;
+                    }
+                }
+            }
+        }
+        panic!("Incomplete Monkey!");
+    }
+
+    let divisors = monkeys.iter().map(|m| m.divisor);
+
+    let mut upper_limit: BigUint = One::one();
+    for d in divisors {
+        print!(" > {}\n", d);
+        upper_limit *= d;
+    }
+    print!("{}\n", upper_limit);
+
+    let rounds = 1000;
+    let monkey_count = monkeys.len();
+
+    let start = Instant::now();
+
+    for round in 1..=rounds {
+        for i_monkey in 0..monkey_count {
+            //print!("Monkey {}\n", i_monkey);
+
+            let (left, right) = monkeys.split_at_mut(i_monkey);
+            while !right[0].items.is_empty() {
+                if let Some(mut inspected_item) = right[0].items.pop_front() {
+                    //print!(" Inspect {}\n", item);
+                    //let should_calculate = &inspected_item > &upper_limit;
+                    //if should_calculate {
+                    //    print!(".");
+                    //}
+                    //let new_level = match should_calculate {
+                    //    false => match right[0].operation.1 {
+                    //        u64::MAX => match right[0].operation.0 {
+                    //            true => &inspected_item * &inspected_item,
+                    //            false => &inspected_item + &inspected_item,
+                    //        },
+                    //        number => match right[0].operation.0 {
+                    //            true => &inspected_item * number,
+                    //            false => &inspected_item + number,
+                    //        },
+                    //    },
+                    //    true => inspected_item,
+                    //};
+
+                    match right[0].operation.1 {
+                        u64::MAX => match right[0].operation.0 {
+                            true => inspected_item = &inspected_item * &inspected_item,
+                            false => inspected_item = &inspected_item + &inspected_item,
+                        },
+                        number => match right[0].operation.0 {
+                            true => inspected_item *= number,
+                            false => inspected_item += number,
+                        },
+                    };
+
+                    //if &inspected_item % &upper_limit == Zero::zero() {
+                    //    inspected_item = &inspected_item / &upper_limit;
+                    //    print!("t");
+                    //}
+
+                    //print!("  New level {}\n", new_level);
+
+                    let target_monkey = match &inspected_item % right[0].divisor == Zero::zero() {
+                        true => right[0].target_true,
+                        false => right[0].target_false,
+                    };
+
+                    //print!("  Throw to {}\n", target_monkey);
+                    if target_monkey > i_monkey {
+                        right[target_monkey - i_monkey]
+                            .items
+                            .push_back(inspected_item);
+                    } else {
+                        left[target_monkey].items.push_back(inspected_item);
+                    }
+
+                    right[0].activities += 1;
+                }
+            }
+        }
+
+        //print!("Round {}\n", round);
+        if round % 50 == 0 {
+            print!("Round {} .. {}\n", round, start.elapsed().as_secs_f32());
+        }
+
+        if round == 1 || round == 20 || round == 1000 {
+            print!("Round {} .. {}\n", round, start.elapsed().as_secs_f32());
+            for m in &monkeys {
+                print!(" ins {}\n", m.activities);
+            }
+        }
+    }
+
+    let mut activities: Vec<u64> = monkeys.iter().map(|m| m.activities).collect();
+    activities.sort_by(|a, b| b.cmp(a));
 
     return (activities[0] * activities[1]).to_string();
 }
@@ -120,6 +287,16 @@ struct Monkey {
     activities: u64,
 }
 
+#[derive(Debug)]
+struct Monkey2 {
+    items: VecDeque<BigUint>,
+    operation: (bool, u64),
+    divisor: u64,
+    target_true: usize,
+    target_false: usize,
+    activities: u64,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -128,6 +305,12 @@ mod tests {
     fn test_part1() {
         let result = process_part1(TEST_INPUT);
         assert_eq!(result, "10605");
+    }
+
+    #[test]
+    fn test_part2() {
+        let result = process_part2(TEST_INPUT);
+        assert_eq!(result, "2713310158");
     }
 
     const TEST_INPUT: &str = "Monkey 0:
