@@ -1,9 +1,9 @@
 extern crate num_bigint;
 extern crate num_traits;
 
-use std::time::Instant;
 use num_bigint::BigUint;
-use num_traits::{One, Zero};
+use num_traits::{Zero, One};
+use std::time::Instant;
 
 use std::collections::VecDeque;
 
@@ -67,10 +67,8 @@ pub fn process_part1(input: &str) -> String {
     let rounds = 20;
     let monkey_count = monkeys.len();
 
-
     for round in 1..=rounds {
         print!("Round {}\n", round);
-
 
         for i_monkey in 0..monkey_count {
             //print!("Monkey {}\n", i_monkey);
@@ -108,6 +106,7 @@ pub fn process_part1(input: &str) -> String {
 
 pub fn process_part2(input: &str) -> String {
     let mut monkeys: Vec<Monkey2> = Vec::new();
+    let mut monkey_items: Vec<VecDeque<BigUint>> = Vec::new();
 
     for monkey_str in input.split("\n\n") {
         let mut items = VecDeque::new();
@@ -119,7 +118,6 @@ pub fn process_part2(input: &str) -> String {
         for line in monkey_str.lines().skip(1) {
             match line.trim().split(" ").collect::<Vec<&str>>().as_slice() {
                 ["Operation:", "new", "=", "old", op1, op2] => {
-                    //print!("OP      {}{}\n", op1, op2);
                     let is_multiplication = (*op1).eq("*");
                     let value = match (*op2).eq("old") {
                         true => u64::MAX,
@@ -128,19 +126,15 @@ pub fn process_part2(input: &str) -> String {
                     opt_operation = Some((is_multiplication, value));
                 }
                 ["Test:", "divisible", "by", test_value] => {
-                    //print!("TS      >> {}\n", test_value);
                     opt_divisor = Some(test_value.parse().unwrap());
                 }
                 ["If", "true:", "throw", "to", "monkey", target] => {
-                    //print!("YES     >> {}\n", target);
                     opt_target_true = Some(target.parse().unwrap());
                 }
                 ["If", "false:", "throw", "to", "monkey", target] => {
-                    //print!("NO     >> {}\n", target);
                     opt_target_false = Some(target.parse().unwrap());
                 }
                 other => {
-                    //print!("Items {:?}\n", other);
                     for item in other.into_iter().skip(2) {
                         items.push_back(item.trim_end_matches(',').parse().unwrap());
                     }
@@ -153,13 +147,13 @@ pub fn process_part2(input: &str) -> String {
                 if let Some(target_true) = opt_target_true {
                     if let Some(target_false) = opt_target_false {
                         monkeys.push(Monkey2 {
-                            items,
                             operation,
                             divisor,
                             target_true,
                             target_false,
                             activities: 0,
                         });
+                        monkey_items.push(items);
                         continue;
                     }
                 }
@@ -170,91 +164,48 @@ pub fn process_part2(input: &str) -> String {
 
     let divisors = monkeys.iter().map(|m| m.divisor);
 
-    let mut upper_limit: BigUint = One::one();
+    let mut trimmer: BigUint = One::one();
     for d in divisors {
-        print!(" > {}\n", d);
-        upper_limit *= d;
+        trimmer *= d;
     }
-    print!("{}\n", upper_limit);
 
-    let rounds = 1000;
+    let rounds = 10_000 as u16;
     let monkey_count = monkeys.len();
 
     let start = Instant::now();
 
+    let mutmonkey = monkeys.as_mut_slice();
+
     for round in 1..=rounds {
         for i_monkey in 0..monkey_count {
-            //print!("Monkey {}\n", i_monkey);
+            while !monkey_items[i_monkey].is_empty() {
+                let mut inspected_item = monkey_items[i_monkey].pop_front().unwrap();
 
-            let (left, right) = monkeys.split_at_mut(i_monkey);
-            while !right[0].items.is_empty() {
-                if let Some(mut inspected_item) = right[0].items.pop_front() {
-                    //print!(" Inspect {}\n", item);
-                    //let should_calculate = &inspected_item > &upper_limit;
-                    //if should_calculate {
-                    //    print!(".");
-                    //}
-                    //let new_level = match should_calculate {
-                    //    false => match right[0].operation.1 {
-                    //        u64::MAX => match right[0].operation.0 {
-                    //            true => &inspected_item * &inspected_item,
-                    //            false => &inspected_item + &inspected_item,
-                    //        },
-                    //        number => match right[0].operation.0 {
-                    //            true => &inspected_item * number,
-                    //            false => &inspected_item + number,
-                    //        },
-                    //    },
-                    //    true => inspected_item,
-                    //};
+                match mutmonkey[i_monkey].operation.1 {
+                    u64::MAX => match mutmonkey[i_monkey].operation.0 {
+                        true => inspected_item = &inspected_item * &inspected_item,
+                        false => inspected_item = &inspected_item + &inspected_item,
+                    },
+                    number => match mutmonkey[i_monkey].operation.0 {
+                        true => inspected_item *= number,
+                        false => inspected_item += number,
+                    },
+                };
 
-                    match right[0].operation.1 {
-                        u64::MAX => match right[0].operation.0 {
-                            true => inspected_item = &inspected_item * &inspected_item,
-                            false => inspected_item = &inspected_item + &inspected_item,
-                        },
-                        number => match right[0].operation.0 {
-                            true => inspected_item *= number,
-                            false => inspected_item += number,
-                        },
+                let target_monkey =
+                    match &inspected_item % mutmonkey[i_monkey].divisor == Zero::zero() {
+                        true => mutmonkey[i_monkey].target_true,
+                        false => mutmonkey[i_monkey].target_false,
                     };
 
-                    //if &inspected_item % &upper_limit == Zero::zero() {
-                    //    inspected_item = &inspected_item / &upper_limit;
-                    //    print!("t");
-                    //}
+                monkey_items[target_monkey].push_back(inspected_item % &trimmer);
 
-                    //print!("  New level {}\n", new_level);
-
-                    let target_monkey = match &inspected_item % right[0].divisor == Zero::zero() {
-                        true => right[0].target_true,
-                        false => right[0].target_false,
-                    };
-
-                    //print!("  Throw to {}\n", target_monkey);
-                    if target_monkey > i_monkey {
-                        right[target_monkey - i_monkey]
-                            .items
-                            .push_back(inspected_item);
-                    } else {
-                        left[target_monkey].items.push_back(inspected_item);
-                    }
-
-                    right[0].activities += 1;
-                }
+                mutmonkey[i_monkey].activities += 1;
             }
         }
 
-        //print!("Round {}\n", round);
         if round % 50 == 0 {
             print!("Round {} .. {}\n", round, start.elapsed().as_secs_f32());
-        }
-
-        if round == 1 || round == 20 || round == 1000 {
-            print!("Round {} .. {}\n", round, start.elapsed().as_secs_f32());
-            for m in &monkeys {
-                print!(" ins {}\n", m.activities);
-            }
         }
     }
 
@@ -289,7 +240,6 @@ struct Monkey {
 
 #[derive(Debug)]
 struct Monkey2 {
-    items: VecDeque<BigUint>,
     operation: (bool, u64),
     divisor: u64,
     target_true: usize,
