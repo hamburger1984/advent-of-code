@@ -4,26 +4,49 @@ pub fn process_part1(input: &str) -> String {
     let height = lines.len();
     print!("{} x {}\n", width, height);
 
+    let mut map: Vec<u8> = Vec::new();
+    let mut start: (usize, usize) = (0, 0);
+    let mut goal: (usize, usize) = (0, 0);
+
     for (y, line) in lines.iter().enumerate() {
-        print!("{:>2}: ", y);
-        for (_x, c) in line.chars().enumerate() {
+        for (x, c) in line.chars().enumerate() {
             match c {
                 'a'..='z' => {
-                    print!(" {:>2} ", c as u8 - 'a' as u8);
+                    map.push(c as u8 - 'a' as u8);
                 }
                 'S' => {
-                    print!(">{:>2}<", 0);
+                    map.push(0);
+                    start = (x, y);
                 }
                 'E' => {
-                    print!("<{:>2}>", 'z' as u8 - 'a' as u8);
+                    map.push('z' as u8 - 'a' as u8);
+                    goal = (x, y);
                 }
                 _ => {
                     panic!("unexpected input");
                 }
             }
         }
+    }
+
+    for y in 0..height {
+        print!("{:>2}: ", y);
+        for x in 0..width {
+            if start == (x, y) {
+                print!(">{:>2}<", map[y * width + x]);
+            } else if goal == (x, y) {
+                print!("<{:>2}>", map[y * width + x]);
+            } else {
+                print!(" {:>2} ", map[y * width + x]);
+            }
+        }
         print!("\n");
     }
+
+    let mut open = vec![start];
+    let mut closed: Vec<(usize, usize)> = Vec::new();
+
+    while let current = open.pop {}
 
     return "nope".to_string();
 }
