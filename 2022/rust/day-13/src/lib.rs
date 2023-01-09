@@ -18,9 +18,10 @@ pub fn process_part1(input: &str) -> String {
                 );
 
                 sum_ordered_pair_numbers += pair_number;
-            } else {
-                print!("Pair {} !!\n", pair_number);
             }
+            /*else {
+                print!("Pair {} !!\n", pair_number);
+            }*/
         }
     }
 
@@ -57,7 +58,7 @@ pub fn process_part2(input: &str) -> String {
                 print!("{}: Found divider 6 .. {:?}\n", i + 1, p);
                 divider6 = i + 1
             }
-            _ => print!("{}: {:?}\n", i + 1, p),
+            _ => { /*print!("{}: {:?}\n", i + 1, p);*/ }
         }
     }
 
@@ -141,32 +142,32 @@ fn tokenize(packet: &str) -> Vec<PacketToken> {
 
         // c is not a digit.. check for and handle collected number
         if collect != u32::MAX {
-            if result
-                .last()
-                .is_some_and(|l| !matches!(l, PacketToken::ListStart))
-            {
-                print!(",");
-            }
+            //if result
+            //    .last()
+            //    .is_some_and(|l| !matches!(l, PacketToken::ListStart))
+            //{
+            //    print!(",");
+            //}
             result.push(PacketToken::Number(collect));
-            print!("{}", collect);
+            //print!("{}", collect);
             collect = u32::MAX;
         }
 
         if c == '[' {
-            if result
-                .last()
-                .is_some_and(|l| !matches!(l, PacketToken::ListStart))
-            {
-                print!(",");
-            }
+            //if result
+            //    .last()
+            //    .is_some_and(|l| !matches!(l, PacketToken::ListStart))
+            //{
+            //    print!(",");
+            //}
             result.push(PacketToken::ListStart);
-            print!("[");
+            //print!("[");
         } else if c == ']' {
             result.push(PacketToken::ListEnd);
-            print!("]");
+            //print!("]");
         }
     }
-    print!("\n");
+    //print!("\n");
 
     return result;
 }
