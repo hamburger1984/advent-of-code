@@ -9,7 +9,7 @@ pub fn process_part1(input: &str) -> String {
             let pkg2 = tokenize(r);
 
             let pair_number = pair_index + 1;
-            if packet_in_right_order(pkg1, pkg2) {
+            if packet_in_right_order(&pkg1, &pkg2) {
                 print!(
                     "Pair {} -- OK, sum: {} -> {}\n",
                     pair_number,
@@ -27,14 +27,54 @@ pub fn process_part1(input: &str) -> String {
     return sum_ordered_pair_numbers.to_string();
 }
 
-fn packet_in_right_order(mut left: Vec<PacketToken>, mut right: Vec<PacketToken>) -> bool {
+pub fn process_part2(input: &str) -> String {
+    let mut packets: Vec<Vec<PacketToken>> = input
+        .lines()
+        .filter(|l| l.len() > 0)
+        .map(|l| tokenize(l))
+        .collect();
+
+    packets.push(tokenize("[[2]]"));
+    packets.push(tokenize("[[6]]"));
+
+    packets.sort_by(|a, b| match packet_in_right_order(a, b) {
+        true => std::cmp::Ordering::Less,
+        false => std::cmp::Ordering::Greater,
+    });
+
+    let mut divider2 = 0;
+    let mut divider6 = 0;
+
+    for (i, p) in packets.iter().enumerate() {
+        match p.as_slice() {
+            [PacketToken::ListStart, PacketToken::ListStart, PacketToken::Number(2), PacketToken::ListEnd, PacketToken::ListEnd] =>
+            {
+                print!("{}: Found divider 2 .. {:?}\n", i + 1, p);
+                divider2 = i + 1
+            }
+            [PacketToken::ListStart, PacketToken::ListStart, PacketToken::Number(6), PacketToken::ListEnd, PacketToken::ListEnd] =>
+            {
+                print!("{}: Found divider 6 .. {:?}\n", i + 1, p);
+                divider6 = i + 1
+            }
+            _ => print!("{}: {:?}\n", i + 1, p),
+        }
+    }
+
+    return (divider2 * divider6).to_string();
+}
+
+fn packet_in_right_order(left_packet: &Vec<PacketToken>, right_packet: &Vec<PacketToken>) -> bool {
+    let mut left = left_packet.to_vec();
+    let mut right = right_packet.to_vec();
+
     let mut left_index = 0;
     let mut right_index = 0;
 
     loop {
         if let Some(left_item) = left.get(left_index) {
             if let Some(right_item) = right.get(right_index) {
-                print!(" > {:?} vs. {:?}\n", &left_item, &right_item);
+                //print!(" > {:?} vs. {:?}\n", &left_item, &right_item);
                 match left_item {
                     PacketToken::Number(left_n) => match right_item {
                         PacketToken::Number(right_n) => {
@@ -131,7 +171,7 @@ fn tokenize(packet: &str) -> Vec<PacketToken> {
     return result;
 }
 
-#[derive(PartialEq, Eq, Debug)]
+#[derive(PartialEq, Eq, Debug, Clone, Copy)]
 enum PacketToken {
     Number(u32),
     ListStart,
@@ -146,6 +186,12 @@ mod tests {
     fn test_part1() {
         let result = process_part1(TESTINPUT);
         assert_eq!(result, "13");
+    }
+
+    #[test]
+    fn test_part2() {
+        let result = process_part2(TESTINPUT);
+        assert_eq!(result, "140");
     }
 
     const TESTINPUT: &str = "[1,1,3,1,1]
