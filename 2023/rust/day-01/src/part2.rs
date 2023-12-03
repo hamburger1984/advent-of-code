@@ -1,41 +1,48 @@
 use crate::custom_error::AocError;
 
-enum State {
-    Start,
-    // eight
-    E,
-    EI,
-    EIG,
-    EIGH,
-    // four, five
-    F,
-    FO,
-    FOU,
-    FI,
-    FIV,
-    // nine
-    N,
-    NI,
-    NIN,
-    // one,
-    O,
-    ON,
-    // six, seven
-    S,
-    SI,
-    SE,
-    SEV,
-    SEVE,
-    // two, three
-    T,
-    TW,
-    TH,
-    THR,
-    THRE,
+#[tracing::instrument]
+pub fn process(
+    input: &str,
+) -> miette::Result<String, AocError> {
+    let total = input.lines().map(|line| {
+        let mut line_it = (0..line.len()).filter_map(|index| {
+            let substr = &line[index..];
+            let result = if substr.starts_with("one") {
+                Some(1)
+            } else if substr.starts_with("two") {
+                Some(2)
+            } else if substr.starts_with("three") {
+                Some(3)
+            } else if substr.starts_with("four") {
+                Some(4)
+            } else if substr.starts_with("five") {
+                Some(5)
+            } else if substr.starts_with("six") {
+                Some(6)
+            } else if substr.starts_with("seven") {
+                Some(7)
+            } else if substr.starts_with("eight") {
+                Some(8)
+            } else if substr.starts_with("nine") {
+                Some(9)
+            } else {
+                substr.chars().next().unwrap().to_digit(10)
+            };
+            result
+        });
+
+        let first = line_it.next().expect("should be a number");
+        match line_it.last() {
+            Some(num) => first * 10 + num,
+            None => first * 10 + first
+        }
+    }).sum::<u32>();
+
+    return Ok(total.to_string());
 }
 
 #[tracing::instrument]
-pub fn process(
+pub fn process_statemachine_broken(
     input: &str,
 ) -> miette::Result<String, AocError> {
     let mut total = 0;
@@ -128,7 +135,6 @@ pub fn process(
                     },
                     State::FIV => match c {
                         'e' => {
-                            //print!("five ");
                             if first_digit == '-' { first_digit = '5'; }
                             last_digit = '5';
                             State::E
@@ -355,6 +361,41 @@ pub fn process(
     }
 
     return Result::Ok(total.to_string());
+}
+
+
+enum State {
+    Start,
+    // eight
+    E,
+    EI,
+    EIG,
+    EIGH,
+    // four, five
+    F,
+    FO,
+    FOU,
+    FI,
+    FIV,
+    // nine
+    N,
+    NI,
+    NIN,
+    // one,
+    O,
+    ON,
+    // six, seven
+    S,
+    SI,
+    SE,
+    SEV,
+    SEVE,
+    // two, three
+    T,
+    TW,
+    TH,
+    THR,
+    THRE,
 }
 
 #[cfg(test)]
