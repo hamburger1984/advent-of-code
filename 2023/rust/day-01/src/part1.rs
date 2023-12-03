@@ -10,7 +10,7 @@ pub fn process(
         let mut last_digit = '-';
 
         for c in line.chars() {
-            if c.is_digit(10) {
+            if c.is_digit(10) && c != '0' {
                 if first_digit == '-' {
                     first_digit = c;
                 }
