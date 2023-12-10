@@ -21,8 +21,7 @@ pub fn process(
                 copies.push(factor);
             }
         }
-
-        println!("{} {}x{} => {:?}", &line, factor,numbers, copies);
+        //println!("{} {}x{} => {:?}", &line, factor,numbers, copies);
     }
 
     Ok(total_cards.to_string())
