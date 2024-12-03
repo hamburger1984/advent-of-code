@@ -12,7 +12,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                 .map(|n| n.parse::<u16>().unwrap())
                 .collect_vec();
 
-            return is_safe_up(&levels) || is_save_down(&levels);
+            is_safe_up(&levels) || is_save_down(&levels)
         })
         .filter(|safe| *safe)
         .count();
@@ -20,6 +20,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     return Ok(safe_reports.to_string());
 }
 
+#[tracing::instrument]
 fn is_save_down(levels: &Vec<u16>) -> bool {
     let mut last = levels.first().unwrap();
     for level in levels[1..].iter() {
@@ -32,6 +33,7 @@ fn is_save_down(levels: &Vec<u16>) -> bool {
     return true;
 }
 
+#[tracing::instrument]
 fn is_safe_up(levels: &Vec<u16>) -> bool {
     let mut last = levels.first().unwrap();
     for level in levels[1..].iter() {
