@@ -6,7 +6,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
 
     let rules = lines
         .by_ref()
-        .take_while(|l| l.len() > 0)
+        .take_while(|l| l.len() > 1)
         .map(|r| {
             let (a, b) = r.split_once('|').unwrap();
             return (a.parse::<u16>().unwrap(), b.parse::<u16>().unwrap());
