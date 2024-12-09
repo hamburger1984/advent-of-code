@@ -6,7 +6,6 @@ use crate::custom_error::AocError;
 pub fn process(input: &str) -> miette::Result<String, AocError> {
     let lines = input.lines().collect::<Vec<&str>>();
     let width = lines.get(0).unwrap().len();
-    let height = lines.len();
     let chars = lines.iter().flat_map(|l| l.chars()).collect::<Vec<char>>();
 
     let mut pos = chars.iter().position(|c| *c == '^').unwrap();
