@@ -55,7 +55,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                 }
                 let next_level = level + 1;
 
-                if curr > 0 && map[curr - 1] == next_level {
+                if (curr % width) > 0 && map[curr - 1] == next_level {
                     todo.push((curr - 1, next_level));
                 }
                 if (curr % width) < width - 1 && map[curr + 1] == next_level {
