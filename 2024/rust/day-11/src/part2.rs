@@ -45,7 +45,7 @@ mod tests {
     #[test]
     fn test_process() -> miette::Result<()> {
         let input = "125 17";
-        assert_eq!("55312", process(input)?);
+        assert_eq!("65601038650482", process(input)?);
         Ok(())
     }
 }
