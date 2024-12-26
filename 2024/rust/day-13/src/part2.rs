@@ -16,8 +16,6 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         let (px, py) = (px + 10000000000000, py + 10000000000000);
         println!("A {},{} B {},{} P {},{}", ax, ay, bx, by, px, py);
 
-        let mut min_tokens = i64::MAX;
-
         // px = ax * p1 + bx * p2
         // px - bx*p2 = ax*p1 | :ax
         // (px - bx*p2)/ax = p1
@@ -36,67 +34,15 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         if left_side % right_side == 0 {
             let p2 = left_side / right_side;
             let p1 = (px - p2 * bx) / ax;
-            println!(" YEAH {},{} ", p1, p2);
             let tokens = p1 * 3 + p2;
-            min_tokens = tokens;
-        }
-
-        //let max = 1 + cmp::min(px / bx, py / by);
-
-        //for i in 0..max {
-        //    let p2 = max - i;
-        //    //print!("{} ", p2);
-        //    if left_side == right_side * p2 {
-        //        let p1 = (px - p2 * bx) / ax;
-        //        println!(" YEAH {},{} ", p1, p2);
-
-        //        let tokens = p1 * 3 + p2;
-        //        if tokens < min_tokens {
-        //            min_tokens = tokens;
-        //        }
-        //    }
-        //}
-
-        //let mut rx = px % ax;
-        //let mut ry = py % ay;
-        //while rx <= px && ry <= py {
-        //    println!(
-        //        " .. {},{} % b {},{} = {},{}",
-        //        rx,
-        //        ry,
-        //        bx,
-        //        by,
-        //        rx % bx,
-        //        ry % by
-        //    );
-        //    if rx % bx == 0 && ry % by == 0 && rx / bx == ry / by {
-        //        let a = (px - px % ax) / ax;
-        //        println!(
-        //            "a {} r/b {} a {},{} b {},{} p {},{} r {},{}",
-        //            a,
-        //            rx / bx,
-        //            ax,
-        //            ay,
-        //            bx,
-        //            by,
-        //            px,
-        //            py,
-        //            rx,
-        //            ry
-        //        );
-        //        let tokens = a * 3 + (rx / bx);
-        //        if tokens < min_tokens {
-        //            println!("min {} -> {}", min_tokens, tokens);
-        //            min_tokens = tokens;
-        //        }
-        //    }
-        //    rx += ax;
-        //    ry += ay;
-        //}
-
-        if min_tokens < i64::MAX {
-            println!("total {} -> {}", total_tokens, total_tokens + min_tokens);
-            total_tokens += min_tokens;
+            println!(
+                "YEAH {},{} total {} -> {}",
+                p1,
+                p2,
+                total_tokens,
+                total_tokens + tokens
+            );
+            total_tokens += tokens;
         }
     }
     Ok(total_tokens.to_string())
