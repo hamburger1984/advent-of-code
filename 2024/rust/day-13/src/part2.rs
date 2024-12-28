@@ -1,5 +1,3 @@
-use std::cmp;
-
 use itertools::Itertools;
 use regex::Regex;
 
