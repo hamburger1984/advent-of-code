@@ -480,6 +480,39 @@ cd 2025
 ./.aoc-fetch.sh 1 both     # Input + Part 1 task
 ```
 
+## Language Extensions - 2025-11-26
+
+After initial setup with three languages (Zig, C#, Go), added three additional languages:
+
+### 🟠 Dingo
+- Modern Go transpiler with enhanced features
+- Sum types, pattern matching, pipe operators
+- Error propagation with `?` operator
+- Template and create-day.sh setup
+
+### 🟢 Swift
+- Swift 5.9+ with Swift Package Manager
+- XCTest framework for testing
+- Full TDD workflow with watch mode
+- Test generation integrated
+
+### 🟤 Kotlin
+- Kotlin 1.9+ with Gradle build system
+- JUnit 5 testing framework
+- Gradle wrapper for each day
+- Test generation integrated
+
+**Updated files:**
+- `.aoc-generate-tests.sh` - Added Swift and Kotlin test generation
+- `README.md` - Updated to show all six languages
+- `TDD_WORKFLOW.md` - Added new languages to watch mode docs
+- `AOC_FETCH_SETUP.md` - Added examples for all six languages
+- `.gitignore` - Added Swift and Kotlin build artifacts
+
+Now supports **six languages** total: Zig, C#, Go (with Lo), Dingo, Swift, and Kotlin.
+
+---
+
 ## End of Conversation Log
 
 Last updated: 2025-11-26

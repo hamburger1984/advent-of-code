@@ -51,9 +51,12 @@ func TestPart1(t *testing.T) {
 
 Each language has a `watch.sh` script that automatically runs tests when you save files:
 
-- **Go:** `cd day-1 && ../watch.sh`
+- **Go:** `cd go && ./watch.sh day-1`
 - **Zig:** `cd zig && ./watch.sh 1`
-- **C#:** `cd day-1 && ../watch.sh 1`
+- **C#:** `cd csharp && ./watch.sh day-1`
+- **Dingo:** `cd dingo && ./watch.sh day-1`
+- **Swift:** `cd swift && ./watch.sh day-1`
+- **Kotlin:** `cd kotlin && ./watch.sh day-1`
 
 ### 3. TDD Cycle
 
@@ -221,6 +224,12 @@ apt-get install fswatch  # Linux
 **Zig:** Watches `day-N/src/`, runs `zig build test-day-N`
 
 **C#:** Uses `dotnet watch run` (tests not yet configured)
+
+**Dingo:** Watches source files, transpiles and runs Go tests
+
+**Swift:** Watches `src/` directory, runs `swift test`
+
+**Kotlin:** Watches `src/` directory, runs `./gradlew test --quiet`
 
 ## Tips & Tricks
 

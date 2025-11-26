@@ -13,7 +13,7 @@ This repository includes an automated tool to fetch puzzle inputs and descriptio
 ✅ **Easy to Use**
 - One-time setup
 - Automatic fetching with `--fetch` flag
-- Works with all three language setups
+- Works with all six language setups (Zig, C#, Go, Dingo, Swift, Kotlin)
 
 ## One-Time Setup
 
@@ -73,6 +73,18 @@ cd csharp
 # Go
 cd go
 ./create-day.sh 5 --fetch
+
+# Dingo
+cd dingo
+./create-day.sh 5 --fetch
+
+# Swift
+cd swift
+./create-day.sh 5 --fetch
+
+# Kotlin
+cd kotlin
+./create-day.sh 5 --fetch
 ```
 
 This will:
@@ -105,6 +117,9 @@ After you solve Part 1 correctly and submit your answer, Part 2 becomes availabl
 ./.aoc-update-task.sh 5 zig      # Updates zig/day-5/task.txt
 ./.aoc-update-task.sh 5 csharp   # Updates csharp/day-5/task.txt
 ./.aoc-update-task.sh 5 go       # Updates go/day-5/task.txt
+./.aoc-update-task.sh 5 dingo    # Updates dingo/day-5/task.txt
+./.aoc-update-task.sh 5 swift    # Updates swift/day-5/task.txt
+./.aoc-update-task.sh 5 kotlin   # Updates kotlin/day-5/task.txt
 ```
 
 Or fetch Part 2 manually:
