@@ -1,0 +1,34 @@
+// Advent of Code - Day N
+// Dingo solution
+
+import (
+    "fmt"
+    "os"
+    "strings"
+)
+
+fn main() {
+    input := os.ReadFile("input.txt")? |> strings.TrimSpace
+
+    fmt.Printf("Part 1: %v\n", part1(input))
+    fmt.Printf("Part 2: %v\n", part2(input))
+}
+
+fn part1(input: string) -> string {
+    lines := input.split("\n")
+
+    // TODO: Implement part 1
+    // Example using Dingo features:
+    // let filtered = lines.filter(|line| line.len() > 0)
+    // let mapped = filtered.map(|line| line.parse::<int>()?)
+
+    return "not implemented"
+}
+
+fn part2(input: string) -> string {
+    lines := input.split("\n")
+
+    // TODO: Implement part 2
+
+    return "not implemented"
+}

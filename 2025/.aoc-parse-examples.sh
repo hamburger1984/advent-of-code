@@ -44,8 +44,8 @@ extract_example_input() {
     local collecting=0
 
     while IFS= read -r line; do
-        # Start after "For example:" or "Here are the same example" or similar
-        if echo "$line" | grep -qiE "(for example:|same example|example.*(lists?|input))"; then
+        # Start after "For example:" or "Here are the same example" or "Consider this example" etc.
+        if echo "$line" | grep -qiE "(for example:|same example|consider.*example|example.*(lists?|input|again))"; then
             in_example=1
             collecting=1
             continue

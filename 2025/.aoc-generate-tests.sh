@@ -166,6 +166,96 @@ EOF
         echo "C# test generation not yet implemented (tests inline in Program.cs)"
         ;;
 
+    swift)
+        # Generate Swift tests
+        cat > "$DAY_DIR/Tests/SolutionTests.swift" << 'EOF'
+import XCTest
+@testable import day
+
+final class SolutionTests: XCTestCase {
+    func testPart1Example() throws {
+        let input = """
+PART1_INPUT_PLACEHOLDER
+"""
+        let result = Solution.part1(input)
+        XCTAssertEqual(result, "PART1_ANSWER_PLACEHOLDER")
+    }
+
+    func testPart2Example() throws {
+        let input = """
+PART2_INPUT_PLACEHOLDER
+"""
+        let result = Solution.part2(input)
+        XCTAssertEqual(result, "PART2_ANSWER_PLACEHOLDER")
+    }
+}
+EOF
+
+        # Replace placeholders
+        if [ -n "$PART1_INPUT" ]; then
+            perl -i -pe "s|PART1_INPUT_PLACEHOLDER|${PART1_INPUT}|g" "$DAY_DIR/Tests/SolutionTests.swift"
+        fi
+        if [ -n "$PART1_ANSWER" ]; then
+            sed -i '' "s/PART1_ANSWER_PLACEHOLDER/${PART1_ANSWER}/g" "$DAY_DIR/Tests/SolutionTests.swift"
+        fi
+        if [ -n "$PART2_INPUT" ]; then
+            perl -i -pe "s|PART2_INPUT_PLACEHOLDER|${PART2_INPUT}|g" "$DAY_DIR/Tests/SolutionTests.swift"
+        fi
+        if [ -n "$PART2_ANSWER" ]; then
+            sed -i '' "s/PART2_ANSWER_PLACEHOLDER/${PART2_ANSWER}/g" "$DAY_DIR/Tests/SolutionTests.swift"
+        fi
+        ;;
+
+    kotlin)
+        # Generate Kotlin tests
+        cat > "$DAY_DIR/src/test/kotlin/SolutionTest.kt" << 'EOF'
+import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+
+class SolutionTest {
+    @Test
+    fun `part1 example`() {
+        val input = """
+PART1_INPUT_PLACEHOLDER
+        """.trimIndent()
+
+        val result = part1(input)
+        assertEquals("PART1_ANSWER_PLACEHOLDER", result)
+    }
+
+    @Test
+    fun `part2 example`() {
+        val input = """
+PART2_INPUT_PLACEHOLDER
+        """.trimIndent()
+
+        val result = part2(input)
+        assertEquals("PART2_ANSWER_PLACEHOLDER", result)
+    }
+}
+EOF
+
+        # Replace placeholders
+        if [ -n "$PART1_INPUT" ]; then
+            perl -i -pe "s|PART1_INPUT_PLACEHOLDER|${PART1_INPUT}|g" "$DAY_DIR/src/test/kotlin/SolutionTest.kt"
+        fi
+        if [ -n "$PART1_ANSWER" ]; then
+            sed -i '' "s/PART1_ANSWER_PLACEHOLDER/${PART1_ANSWER}/g" "$DAY_DIR/src/test/kotlin/SolutionTest.kt"
+        fi
+        if [ -n "$PART2_INPUT" ]; then
+            perl -i -pe "s|PART2_INPUT_PLACEHOLDER|${PART2_INPUT}|g" "$DAY_DIR/src/test/kotlin/SolutionTest.kt"
+        fi
+        if [ -n "$PART2_ANSWER" ]; then
+            sed -i '' "s/PART2_ANSWER_PLACEHOLDER/${PART2_ANSWER}/g" "$DAY_DIR/src/test/kotlin/SolutionTest.kt"
+        fi
+        ;;
+
+    dingo)
+        # Dingo transpiles to Go, so tests would be written in Go after transpilation
+        # For now, users can write Go-style tests manually
+        echo "Dingo test generation not yet implemented (write Go tests after transpiling)"
+        ;;
+
     *)
         echo "Unknown language: $LANG"
         exit 1
