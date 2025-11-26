@@ -1,0 +1,188 @@
+# Advent of Code 2025 - .gitignore
+
+# ============================================
+# SECRETS - Never commit these!
+# ============================================
+
+# Session tokens and credentials
+.aoc-session
+**/.aoc-session
+session.txt
+cookie.txt
+*.session
+
+# Environment files that might contain secrets
+.env
+.env.local
+*.secret
+
+# ============================================
+# Zig Build Artifacts
+# ============================================
+
+.zig-cache/
+zig-cache/
+zig-out/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# ============================================
+# C# / .NET Build Artifacts
+# ============================================
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / Rider cache files
+.vs/
+.vscode/
+.idea/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+
+# Rider
+.idea/
+*.sln.iml
+
+# ============================================
+# Go Build Artifacts
+# ============================================
+
+# Binaries
+*.exe
+*.exe~
+*.test
+*.out
+
+# Go build cache
+go/day-*/day-*
+go/day-*/*.test
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# ============================================
+# Editor / IDE
+# ============================================
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs (IntelliJ, CLion, GoLand, etc.)
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Vim
+*.swp
+*.swo
+*~
+.vim/
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# ============================================
+# OS Generated Files
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.directory
+.Trash-*
+
+# ============================================
+# Profiling and Performance Analysis
+# ============================================
+
+*.prof
+*.pprof
+*.dhat
+cpu.prof
+mem.prof
+flamegraph.svg
+*.trace
+
+# Criterion benchmarks
+target/criterion/
+
+# ============================================
+# Temporary Files
+# ============================================
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# ============================================
+# Project Specific
+# ============================================
+
+# Don't commit actual puzzle inputs or solutions
+# (uncomment if you want to keep solutions private)
+# */input.txt
+# */task.txt
+
+# Scratch/test files
+scratch/
+test-output/
+*.test.txt
