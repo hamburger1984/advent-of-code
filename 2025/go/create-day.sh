@@ -63,6 +63,20 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
     else
         echo "⚠ Fetch script not found at $FETCH_SCRIPT"
     fi
+
+    # Generate tests from examples if task was fetched
+    if [ -f "$DAY_DIR/task.txt" ]; then
+        PARSE_SCRIPT="../.aoc-parse-examples.sh"
+        GEN_SCRIPT="../.aoc-generate-tests.sh"
+
+        if [ -f "$PARSE_SCRIPT" ] && [ -f "$GEN_SCRIPT" ]; then
+            echo "Generating tests from examples..."
+            EXAMPLES=$("$PARSE_SCRIPT" "$DAY_DIR/task.txt" all 2>/dev/null)
+            if [ $? -eq 0 ] && [ -n "$EXAMPLES" ]; then
+                "$GEN_SCRIPT" go "$DAY_DIR" "$EXAMPLES" 2>/dev/null && echo "✓ Tests generated with example data"
+            fi
+        fi
+    fi
 fi
 
 cd "$DAY_DIR"

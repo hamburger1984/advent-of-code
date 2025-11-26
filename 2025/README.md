@@ -26,11 +26,40 @@ This year I'm exploring three different languages:
 
 ## Quick Start
 
-### With Auto-Fetch (Recommended)
+### TDD Workflow (Recommended) 🚀
 
-First, set up your AoC session token (one-time): See [AOC_FETCH_SETUP.md](./AOC_FETCH_SETUP.md)
+**New!** Automatic test generation from puzzle examples:
+
+```bash
+# 1. Set up session token (one-time): See AOC_FETCH_SETUP.md
+echo 'your-session-token' > ~/.aoc-session
+chmod 600 ~/.aoc-session
+
+# 2. Create day with auto-fetch (generates tests automatically!)
+cd zig
+./create-day.sh 1 --fetch
+# → Input fetched
+# → Part 1 task fetched  
+# → Tests auto-generated from examples!
+
+# 3. Start TDD mode
+./watch.sh 1
+# → Tests run automatically on file save
+# → Red → Green → Refactor cycle!
+
+# 4. After solving Part 1, get Part 2
+cd .. && ./.aoc-update-task.sh 1 zig
+# → Part 2 tests auto-generated!
+
+# 5. Continue TDD for Part 2
+cd zig && ./watch.sh 1
+```
 
 **Note:** Puzzle data is cached and shared across all languages. Fetch once in any language, use everywhere!
+
+### With Auto-Fetch (No Watch Mode)
+
+First, set up your AoC session token (one-time): See [AOC_FETCH_SETUP.md](./AOC_FETCH_SETUP.md)
 
 **Part 2:** After solving Part 1, update the task with: `./.aoc-update-task.sh <day> <language>`
 
