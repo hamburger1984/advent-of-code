@@ -7,7 +7,7 @@ Console.WriteLine();
 var input = File.ReadAllText("input.txt").TrimEnd();
 
 Console.WriteLine($"Part 1: {Solution.Part1(input)}");
-//Console.WriteLine($"Part 2: {Solution.Part2(input)}");
+Console.WriteLine($"Part 2: {Solution.Part2(input)}");
 
 static class Solution
 {
@@ -45,8 +45,32 @@ static class Solution
 
     public static string Part2(string input)
     {
-        // TODO: Implement part 2
-        throw new NotImplementedException();
+      var lines = input.Split('\n');
+
+      var pos = 50;
+      var zeros = 0;
+
+      foreach(var line in lines)
+      {
+        var steps = int.Parse(line.Substring(1));
+        var step = line[0]=='R'?1:-1;
+
+        while(steps > 0)
+        {
+          steps--;
+          pos += step;
+
+          if(pos < 0) pos += 100;
+          if(pos > 99) pos -= 100;
+
+          if(pos == 0)
+          {
+            zeros++;
+          }
+        }
+      }
+
+      return zeros.ToString();
     }
 }
 
@@ -57,7 +81,7 @@ static class Tests
     public static void RunTests()
     {
         TestPart1();
-        //TestPart2();
+        TestPart2();
         Console.WriteLine("All tests passed!");
     }
 
@@ -84,8 +108,17 @@ L82";
 
     static void TestPart2()
     {
-        const string input = @"TODO: Add example input";
-        const string expected = "TODO";
+        const string input = @"L68
+L30
+R48
+L5
+R60
+L55
+L1
+L99
+R14
+L82";
+        const string expected = "6";
 
         var result = Solution.Part2(input);
         if (result != expected)
