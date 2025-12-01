@@ -169,17 +169,33 @@ html_to_text() {
     sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | \
     grep -v '^$' | \
     awk '
-        /^--- Day [0-9]+:/ { flag=1 }
+        /^--- Day [0-9]+:/ {
+            flag=1
+            # Split header from any text that follows
+            match($0, /^--- Day [0-9]+: [^-]+ ---/)
+            header = substr($0, 1, RLENGTH)
+            rest = substr($0, RLENGTH + 1)
+            print header
+            print ""
+            if (rest != "") print rest
+            next
+        }
         flag {
             # Stop at footer content
             if (/^You can also/ || /^\[Share/ || /^To play, please identify yourself/ || /^Although it hasn.*t changed/) {
                 exit
             }
-            # Separate Part Two with blank lines
+            # Separate Part Two with blank lines and add line break after header
             if (/^--- Part Two ---/) {
+                # Split header from any text that follows
+                match($0, /^--- Part Two ---/)
+                header = substr($0, 1, RLENGTH)
+                rest = substr($0, RLENGTH + 1)
                 print ""
                 print ""
-                print $0
+                print header
+                print ""
+                if (rest != "") print rest
                 next
             }
             print
