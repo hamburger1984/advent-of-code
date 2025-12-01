@@ -1,26 +1,3 @@
-Day 1 - Advent of Code 2025
-window.addEventListener('click', function(e,s,r){if(e.target.nodeName==='CODE'&&e.detail===3){s=window.getSelection();s.removeAllRanges();r=document.createRange();r.selectNodeContents(e.target);s.addRange(r);}});
-<!--
-Oh, hello!  Funny seeing you here.
-I appreciate your enthusiasm, but you aren't going to find much down here.
-There certainly aren't clues to any of the puzzles.  The best surprises don't
-even appear in the source until you unlock them for real.
-Please be careful with automated requests; I'm not a massive company, and I can
-only take so much traffic.  Please be considerate so that everyone gets to play.
-If you're curious about how Advent of Code works, it's running on some custom
-Perl code. Other than a few integrations (auth, analytics, social media), I
-built the whole thing myself, including the design, animations, prose, and all
-of the puzzles.
-The puzzles are most of the work; preparing a new calendar and a new set of
-puzzles takes all of my free time for months every year. A lot of effort went
-into building this thing - I hope you're enjoying playing it as much as I
-enjoyed making it for you!
-If you'd like to hang out, I'm @was.tl on Bluesky and @ericwastl@hachyderm.io
-on Mastodon.
-- Eric Wastl
--->
-Advent of Code[About][Events][Shop][Settings][Log Out]hamburger1984 (AoC++) 1*&nbsp;&nbsp;&nbsp;0x0000|2025[Calendar][AoC++][Sponsors][Leaderboards][Stats]
-Our sponsors help make Advent of Code possible:Citadel Securities - Our engineers build the tech that helps power global markets with speed, precision and data. Every nanosecond matters. Join us at the edge of innovation (Just don&apos;t blink. The markets won&apos;t).
 --- Day 1: Secret Entrance ---The Elves have good news and bad news.
 The good news is that they've discovered project management! This has given them the tools they need to prevent their usual Christmas emergency. For example, they now know that the North Pole decorations need to be finished soon so that other critical tasks can start on time.
 The bad news is that they've realized they have a different emergency: according to their resource planning, none of them have any time left to decorate the North Pole!
@@ -61,6 +38,8 @@ The dial is rotated L82 to point at 32.
 Because the dial points at 0 a total of three times during this process, the password in this example is 3.
 Analyze the rotations in your attached document. What's the actual password to open the door?
 Your puzzle answer was 1026.The first half of this puzzle is complete! It provides one gold star: *
+
+
 --- Part Two ---You're sure that's the right password, but the door won't open. You knock, but nobody answers. You build a snowman while you think.
 As you're rolling the snowballs for your snowman, you find another security document that must have fallen into the snow:
 "Due to newer security protocols, please use password method 0x434C49434B until further notice."
@@ -81,16 +60,3 @@ In this example, the dial points at 0 three times at the end of a rotation, plus
 Be careful: if the dial were pointing at 50, a single rotation like R1000 would cause the dial to point at 0 ten times before returning back to 50!
 Using password method 0x434C49434B, what is the password to open the door?
 Answer:
-Although it hasn't changed, you can still get your puzzle input.
-You can also [Shareon
-Bluesky
-Twitter
-Mastodon</a
->] this puzzle.
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-ga('create', 'UA-69522494-1', 'auto');
-ga('set', 'anonymizeIp', true);
-ga('send', 'pageview');

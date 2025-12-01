@@ -171,8 +171,16 @@ html_to_text() {
     awk '
         /^--- Day [0-9]+:/ { flag=1 }
         flag {
-            if (/^You can also/ || /^\[Share/ || /^To play, please identify yourself/) {
+            # Stop at footer content
+            if (/^You can also/ || /^\[Share/ || /^To play, please identify yourself/ || /^Although it hasn.*t changed/) {
                 exit
+            }
+            # Separate Part Two with blank lines
+            if (/^--- Part Two ---/) {
+                print ""
+                print ""
+                print $0
+                next
             }
             print
         }

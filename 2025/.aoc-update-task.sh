@@ -39,15 +39,12 @@ echo -e "${BLUE}Fetching Part 2 task for day ${DAY}...${NC}"
 # Check cache first
 TASK2_CACHE="${CACHE_DIR}/day${DAY}_task_part2.html"
 
-if [ -f "$TASK2_CACHE" ]; then
-    echo -e "${GREEN}✓ Using cached Part 2 task${NC}"
-    sed 's/<[^>]*>//g' "$TASK2_CACHE" | \
-    sed 's/&lt;/</g; s/&gt;/>/g; s/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g' | \
-    sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | \
-    grep -v '^$' > "$DAY_DIR/task.txt" || true
-    echo -e "${GREEN}✓ Updated $DAY_DIR/task.txt with Part 2${NC}"
-elif [ -f "$FETCH_SCRIPT" ]; then
-    if TASK=$("$FETCH_SCRIPT" "$DAY" task2 2>&1); then
+if [ -f "$FETCH_SCRIPT" ]; then
+    # Use fetch script for proper formatting (removes HTML headers/footers, formats Part Two)
+    if [ -f "$TASK2_CACHE" ]; then
+        echo -e "${GREEN}✓ Using cached Part 2 task${NC}"
+    fi
+    if TASK=$("$FETCH_SCRIPT" "$DAY" task2 2>/dev/null); then
         echo "$TASK" > "$DAY_DIR/task.txt"
         echo -e "${GREEN}✓ Updated $DAY_DIR/task.txt with Part 2${NC}"
     else
