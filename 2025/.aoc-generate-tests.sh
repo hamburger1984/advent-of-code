@@ -161,9 +161,41 @@ EOF
         ;;
 
     csharp)
-        # C# doesn't have a separate test file by default
-        # Could add xUnit tests, but for now, skip
-        echo "C# test generation not yet implemented (tests inline in Program.cs)"
+        # Update C# inline tests in Program.cs
+        if [ -f "$DAY_DIR/Program.cs" ]; then
+            # Escape for C# verbatim string
+            CSHARP_INPUT1=""
+            CSHARP_INPUT2=""
+
+            if [ -n "$PART1_INPUT" ]; then
+                # For C# verbatim strings, escape double quotes
+                CSHARP_INPUT1=$(echo "$PART1_INPUT" | sed 's/"/""/g')
+            fi
+
+            if [ -n "$PART2_INPUT" ]; then
+                CSHARP_INPUT2=$(echo "$PART2_INPUT" | sed 's/"/""/g')
+            fi
+
+            # Update Part 1 test
+            if [ -n "$CSHARP_INPUT1" ]; then
+                perl -i -pe 'BEGIN{undef $/;} s/const string input = @"TODO: Add example input";(\s+)const string expected = "TODO";/const string input = @"'"$CSHARP_INPUT1"'";$1const string expected = "'"$PART1_ANSWER"'";/sm' "$DAY_DIR/Program.cs" 2>/dev/null || \
+                sed -i '' '/TestPart1/,/TestPart2/{
+                    s/const string input = @"TODO: Add example input";/const string input = @"'"$(echo "$CSHARP_INPUT1" | sed 's/[\/&]/\\&/g')"'";/
+                    s/const string expected = "TODO";/const string expected = "'"$PART1_ANSWER"'";/
+                }' "$DAY_DIR/Program.cs"
+            fi
+
+            # Update Part 2 test
+            if [ -n "$CSHARP_INPUT2" ]; then
+                perl -i -0pe 's/(TestPart2.*?const string input = @")[^"]*(".*?const string expected = ")[^"]*(")/\1'"$CSHARP_INPUT2"'\2'"$PART2_ANSWER"'\3/s' "$DAY_DIR/Program.cs" 2>/dev/null || \
+                sed -i '' '/TestPart2/,/^[[:space:]]*}[[:space:]]*$/{
+                    s/const string input = @"TODO: Add example input";/const string input = @"'"$(echo "$CSHARP_INPUT2" | sed 's/[\/&]/\\&/g')"'";/
+                    s/const string expected = "TODO";/const string expected = "'"$PART2_ANSWER"'";/
+                }' "$DAY_DIR/Program.cs"
+            fi
+
+            echo "✓ Tests updated in Program.cs"
+        fi
         ;;
 
     swift)

@@ -163,10 +163,20 @@ fetch_task() {
 html_to_text() {
     # Simple HTML to text conversion
     # Removes HTML tags and decodes common entities
+    # Also removes content before "--- Day" and footer content
     sed 's/<[^>]*>//g' | \
     sed 's/&lt;/</g; s/&gt;/>/g; s/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g' | \
     sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | \
-    grep -v '^$' || true
+    grep -v '^$' | \
+    awk '
+        /^--- Day [0-9]+:/ { flag=1 }
+        flag {
+            if (/^You can also/ || /^\[Share/ || /^To play, please identify yourself/) {
+                exit
+            }
+            print
+        }
+    ' || true
 }
 
 # Main script

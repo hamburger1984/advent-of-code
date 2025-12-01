@@ -45,10 +45,12 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
 
     if [ -f "$TASK_CACHE" ]; then
         echo "✓ Using cached task (shared across all languages)"
-        sed 's/<[^>]*>//g' "$TASK_CACHE" | \
+        # Use the fetch script to properly format the task
+        "$FETCH_SCRIPT" "$DAY" task > "$DAY_DIR/task.txt" 2>/dev/null || \
+        (sed 's/<[^>]*>//g' "$TASK_CACHE" | \
         sed 's/&lt;/</g; s/&gt;/>/g; s/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g' | \
         sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | \
-        grep -v '^$' > "$DAY_DIR/task.txt" || true
+        grep -v '^$' > "$DAY_DIR/task.txt" || true)
     elif [ -f "$FETCH_SCRIPT" ]; then
         echo "Fetching task from Advent of Code..."
         if TASK=$("$FETCH_SCRIPT" "$DAY" task 2>&1); then

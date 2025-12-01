@@ -51,10 +51,12 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
 
     if [ -f "$TASK_CACHE" ]; then
         echo "✓ Using cached task (shared across all languages)"
-        sed 's/<[^>]*>//g' "$TASK_CACHE" | \
+        # Use the fetch script to properly format the task
+        "$FETCH_SCRIPT" "$DAY" task > "$DAY_DIR/task.txt" 2>/dev/null || \
+        (sed 's/<[^>]*>//g' "$TASK_CACHE" | \
         sed 's/&lt;/</g; s/&gt;/>/g; s/&amp;/\&/g; s/&quot;/"/g; s/&#39;/'"'"'/g' | \
         sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | \
-        grep -v '^$' > "$DAY_DIR/task.txt" || true
+        grep -v '^$' > "$DAY_DIR/task.txt" || true)
     elif [ -f "$FETCH_SCRIPT" ]; then
         echo "Fetching task from Advent of Code..."
         if TASK=$("$FETCH_SCRIPT" "$DAY" task 2>&1); then
@@ -65,6 +67,20 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
         fi
     else
         echo "⚠ Fetch script not found at $FETCH_SCRIPT"
+    fi
+
+    # Generate tests from examples if task was fetched
+    if [ -f "$DAY_DIR/task.txt" ]; then
+        PARSE_SCRIPT="../.aoc-parse-examples.sh"
+        GEN_SCRIPT="../.aoc-generate-tests.sh"
+
+        if [ -f "$PARSE_SCRIPT" ] && [ -f "$GEN_SCRIPT" ]; then
+            echo "Generating tests from examples..."
+            EXAMPLES=$("$PARSE_SCRIPT" "$DAY_DIR/task.txt" all 2>/dev/null)
+            if [ $? -eq 0 ] && [ -n "$EXAMPLES" ]; then
+                "$GEN_SCRIPT" csharp "$DAY_DIR" "$EXAMPLES" 2>/dev/null && echo "✓ Tests generated with example data"
+            fi
+        fi
     fi
 fi
 

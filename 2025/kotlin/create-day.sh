@@ -37,7 +37,10 @@ fi
 # Copy input and task
 CACHE_DIR="${HOME}/.aoc-cache/${YEAR}"
 cp "${CACHE_DIR}/day${DAY}_input.txt" "${DAY_DIR}/input.txt"
-cp "${CACHE_DIR}/day${DAY}_task_part1.html" "${DAY_DIR}/task.txt"
+
+# Use the fetch script to properly format the task (removes HTML header/footer)
+"${SCRIPT_DIR}/../.aoc-fetch.sh" "$DAY" task > "${DAY_DIR}/task.txt" 2>/dev/null || \
+    cp "${CACHE_DIR}/day${DAY}_task_part1.html" "${DAY_DIR}/task.txt"
 
 # Parse examples and generate tests
 EXAMPLES_JSON="${CACHE_DIR}/day${DAY}_examples.json"
