@@ -57,7 +57,7 @@ dotnet run
 2. Add puzzle input to `day-1/input.txt`
 3. Add problem description to `day-1/task.txt`
 4. Update test examples in `Program.cs` (in the `#if DEBUG` section)
-5. Implement `Part1()` and `Part2()` functions in `day-1/Program.cs`
+5. Implement `Solution.Part1()` and `Solution.Part2()` methods in `day-1/Program.cs`
 6. Run: `cd day-1 && dotnet run`
 
 ### Test Structure
@@ -65,15 +65,28 @@ dotnet run
 Tests are embedded in `Program.cs` within `#if DEBUG` blocks:
 
 ```csharp
+static class Solution
+{
+    public static string Part1(string input)
+    {
+        // Your implementation here
+    }
+    
+    public static string Part2(string input)
+    {
+        // Your implementation here
+    }
+}
+
 #if DEBUG
-public static class Tests
+static class Tests
 {
     static void TestPart1()
     {
         const string input = @"example input";
         const string expected = "42";
         
-        var result = Part1(input);
+        var result = Solution.Part1(input);
         if (result != expected)
             throw new Exception($"Part 1 test failed: expected '{expected}', got '{result}'");
     }
