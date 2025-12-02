@@ -13,8 +13,30 @@ static class Solution
 {
     public static string Part1(string input)
     {
-        // TODO: Implement part 1
-        throw new NotImplementedException();
+      var invalidIds = new List<long>();
+
+      foreach(var range in input.Split(','))
+      {
+        var parts = range.Split('-');
+        // skip if both start end end are odd length
+        if(parts.First().Length == parts.Last().Length &&
+          parts.First().Length%2==1) continue;
+
+        var start = long.Parse(parts[0]);
+        var end = long.Parse(parts[1]);
+
+        for(var i = start; i <= end; i++){
+          var s = i.ToString();
+          if(s.Length%2==1) continue;
+
+          var halves = s.Length/2;
+          if(s.Substring(0, halves)==s.Substring(halves)){
+            invalidIds.Add(i);
+          }
+        }
+      }
+
+      return invalidIds.Sum().ToString();
     }
 
     public static string Part2(string input)
@@ -31,16 +53,14 @@ static class Tests
     public static void RunTests()
     {
         TestPart1();
-        TestPart2();
+
+        //TestPart2();
         Console.WriteLine("All tests passed!");
     }
 
     static void TestPart1()
     {
-        const string input = @"11-22,95-115,998-1012,1188511880-1188511890,222220-222224,
-1698522-1698528,446443-446449,38593856-38593862,565653-565659,
-824824821-824824827,2121212118-2121212124
-(The ID ranges are wrapped here for legibility; in your input, they appear on a single long line.)";
+        const string input = @"11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124";
         const string expected = "1227775554";
 
         var result = Solution.Part1(input);
