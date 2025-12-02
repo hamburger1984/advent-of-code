@@ -56,11 +56,11 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
         grep -v '^$' > "$DAY_DIR/task.txt" || true)
     elif [ -f "$FETCH_SCRIPT" ]; then
         echo "Fetching task from Advent of Code..."
-        if TASK=$("$FETCH_SCRIPT" "$DAY" task 2>&1); then
+        if TASK=$("$FETCH_SCRIPT" "$DAY" task 2>/dev/null); then
             echo "$TASK" > "$DAY_DIR/task.txt"
             echo "✓ Task saved to $DAY_DIR/task.txt"
         else
-            echo "⚠ Failed to fetch task: $TASK"
+            echo "⚠ Failed to fetch task"
         fi
     else
         echo "⚠ Fetch script not found at $FETCH_SCRIPT"
