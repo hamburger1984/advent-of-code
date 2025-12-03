@@ -39,7 +39,7 @@ if [ "$FETCH_DATA" = "--fetch" ]; then
         cat "$INPUT_CACHE" > "$DAY_DIR/input.txt"
     elif [ -f "$FETCH_SCRIPT" ]; then
         echo "Fetching input from Advent of Code..."
-        if INPUT=$("$FETCH_SCRIPT" "$DAY" input 2>&1); then
+        if INPUT=$("$FETCH_SCRIPT" "$DAY" input 2>/dev/null); then
             echo "$INPUT" > "$DAY_DIR/input.txt"
             echo "✓ Input saved to $DAY_DIR/input.txt"
         else
