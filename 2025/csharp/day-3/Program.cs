@@ -58,7 +58,7 @@ static class Solution
             Debug.Assert(maxCharIndex != maxChar2Index);
             Debug.Assert(maxCharIndex < maxChar2Index);
 
-            Console.WriteLine(line + $" {maxChar - '0'}{maxChar2 - '0'}");
+            //Console.WriteLine(line + $" {maxChar - '0'}{maxChar2 - '0'}");
 
             sum += (maxChar - '0') * 10 + (maxChar2 - '0');
         }
@@ -67,9 +67,57 @@ static class Solution
 
     public static string Part2(string input)
     {
-        // TODO: Implement part 2
-        throw new NotImplementedException();
+        long sum = 0;
+        foreach(var line in input.Split('\n'))
+        {
+            if(!line.All(c => c >= '0' && c <= '9'))
+            {
+                Console.WriteLine($"Invalid input: {line}");
+                continue;
+            }
+
+            var chars = findLargestChars(line, 12);
+
+            long n = 0;
+            foreach(var c in chars){
+                n = n * 10 + (c - '0');
+            }
+            sum += n;
+
+            Console.WriteLine($"Line: {line}, Number: {n}");
+        }
+        return sum.ToString();
     }
+
+    private static char[] findLargestChars(string line, int number)
+    {
+        var maxChars = new char[number];
+        var maxCharIndices = new int[number];
+        var maxChar2Indices = new int[number];
+
+        var cursor = 0;
+        // for each digit we want to find
+        for(var i = 0; i < number; i++)
+        {
+            var remainingDigits = number-i-1;
+
+            // continue from where we left of, stop so we still have enough left for the rest of the digits
+            for(var j = cursor; j < line.Length-remainingDigits; j++){
+                //Console.WriteLine($"Checking char {line[j]} at index {j}, comparing to {maxChars[i]}");
+                if(line[j] > maxChars[i]){
+                    maxChars[i] = line[j];
+                    maxCharIndices[i] = j;
+                    if(maxChars[i] == '9') break;
+                }
+            }
+
+            cursor = maxCharIndices[i]+1;
+            //Console.WriteLine($"Max char for digit {i+1}: {maxChars[i]} at index {maxCharIndices[i]}, cursor {cursor}");
+        }
+
+        return maxChars;
+    }
+
 }
 
 // Test examples - auto-generated from task description
@@ -79,7 +127,7 @@ static class Tests
     public static void RunTests()
     {
         TestPart1();
-        //TestPart2();
+        TestPart2();
         Console.WriteLine("All tests passed!");
     }
 
@@ -100,8 +148,11 @@ static class Tests
 
     static void TestPart2()
     {
-        const string input = @"TODO: Add example input";
-        const string expected = "TODO";
+        const string input = @"987654321111111
+811111111111119
+234234234234278
+818181911112111";
+        const string expected = "3121910778619";
 
         var result = Solution.Part2(input);
         if (result != expected)
