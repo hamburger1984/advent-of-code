@@ -69,8 +69,87 @@ static class Solution
 
     public static string Part2(string input)
     {
-        // TODO: Implement part 2
-        throw new NotImplementedException();
+        var grid = input.Split('\n').Select(line => line.Trim().ToCharArray()).ToArray();
+
+        var totalRemoved = 0;
+        var removed = 0;
+
+        do
+        {
+            removed = 0;
+            var accessible = new Dictionary<int, int[]>();
+            for(var row = 0; row < grid.Length; row++)
+            {
+                var rowAccessible = accessibleIndices(grid, row);
+                if(rowAccessible.Length > 0)
+                {
+                    accessible[row] = rowAccessible;
+                }
+            }
+
+            foreach(var kvp in accessible)
+            {
+                var row = kvp.Key;
+                var indices = kvp.Value;
+                foreach(var index in indices)
+                {
+                    grid[row][index] = 'x';
+                    removed++;
+                }
+            }
+            totalRemoved += removed;
+
+            Console.WriteLine($"Removed: {removed} Total removed: {totalRemoved}");
+            Console.WriteLine($"=====");
+        } while(removed > 0);
+
+        return totalRemoved.ToString();
+    }
+
+    private static int[] accessibleIndices(char[][] grid, int rowIndex){
+        var width = grid[rowIndex].Length;
+        var height = grid.Length;
+
+        var accessible = new List<int>();
+        for(var i = 0; i < width; i++)
+        {
+            if(grid[rowIndex][i] != '@')
+                continue;
+
+            var neighbors = 0;
+
+            if(i > 0){
+                // left
+                if(grid[rowIndex][i - 1]=='@') neighbors++;
+
+                // up left
+                if(rowIndex> 0 && grid[rowIndex - 1][i - 1]=='@') neighbors++;
+
+                // down left
+                if(rowIndex < height - 1 && grid[rowIndex + 1][i - 1]=='@') neighbors++;
+            }
+
+            if(i < width - 1){
+                // right
+                if(grid[rowIndex][i + 1]=='@') neighbors++;
+
+                // up right
+                if(rowIndex > 0 && grid[rowIndex - 1][i + 1]=='@') neighbors++;
+
+                // down right
+                if(rowIndex < height - 1 && grid[rowIndex + 1][i + 1]=='@') neighbors++;
+            }
+
+            // up
+            if(rowIndex > 0  && grid[rowIndex - 1][i ]=='@') neighbors++;
+
+            // down
+            if(rowIndex < height-1  && grid[rowIndex + 1][i ]=='@') neighbors++;
+
+            if (neighbors < 4) accessible.Add(i);
+        }
+
+        return accessible.ToArray();
     }
 }
 
@@ -81,7 +160,7 @@ static class Tests
     public static void RunTests()
     {
         TestPart1();
-        //TestPart2();
+        TestPart2();
         Console.WriteLine("All tests passed!");
     }
 
@@ -108,8 +187,17 @@ static class Tests
 
     static void TestPart2()
     {
-        const string input = @"TODO: Add example input";
-        const string expected = "TODO";
+        const string input = @"..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.";
+        const string expected = "43";
 
         var result = Solution.Part2(input);
         if (result != expected)
