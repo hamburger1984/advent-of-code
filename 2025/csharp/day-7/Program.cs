@@ -48,8 +48,25 @@ static class Solution
 
     public static string Part2(string input)
     {
-        // TODO: Implement part 2
-        throw new NotImplementedException();
+
+        var total = 0;
+        foreach(var l in input.Split('\n').Skip(1))
+        {
+            var nextLaser = l.IndexOf('^');
+            while(nextLaser!=-1)
+            {
+                if(lasers.Contains(nextLaser)){
+                    total++;
+                    lasers.Remove(nextLaser);
+                    if(nextLaser > 0)
+                        lasers.Add(nextLaser-1);
+                    if(nextLaser+1 < l.Length)
+                        lasers.Add(nextLaser+1);
+                }
+            }
+        }
+
+        return total.ToString();
     }
 }
 
@@ -60,7 +77,7 @@ static class Tests
     public static void RunTests()
     {
         TestPart1();
-        //TestPart2();
+        TestPart2();
         Console.WriteLine("All tests passed!");
     }
 
@@ -93,8 +110,23 @@ static class Tests
 
     static void TestPart2()
     {
-        const string input = @"TODO: Add example input";
-        const string expected = "TODO";
+        const string input = @".......S.......
+...............
+.......^.......
+...............
+......^.^......
+...............
+.....^.^.^.....
+...............
+....^.^...^....
+...............
+...^.^...^.^...
+...............
+..^...^.....^..
+...............
+.^.^.^.^.^...^.
+...............";
+        const string expected = "40";
 
         var result = Solution.Part2(input);
         if (result != expected)
